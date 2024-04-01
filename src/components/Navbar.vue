@@ -21,13 +21,46 @@
           <router-link to="/about" class="nav-link">About</router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/contact" class="nav-link">Contact</router-link>
+          <router-link to="/share" class="nav-link">Share</router-link>
         </li>
       </ul>
     </div>
     <div class="d-flex">
-      <router-link to="/login" class="btn btn-outline-success" type="submit">Giris</router-link>
-      <button class="btn btn-outline-danger" type="submit">cikis</button>
+      <router-link to="/login" v-show="!user" class="btn btn-outline-success" type="submit"
+        >Giris</router-link
+      >
+      <router-link
+        to="/logout"
+        @click="handleLogut"
+        v-show="user"
+        class="btn btn-outline-danger"
+        type="submit"
+        >cikis</router-link
+      >
     </div>
   </nav>
 </template>
+
+<script>
+import getUser from "../composables/getUser";
+import { auth } from "../firebase/config";
+import { signOut } from "firebase/auth";
+import { useRouter } from "vue-router";
+
+export default {
+  setup() {
+    const { user } = getUser();
+    const router = useRouter();
+    const handleLogut = async () => {
+      await signOut(auth)
+        .then(() => {
+          router.push({ name: "Login" });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+    return { user, handleLogut };
+  },
+};
+</script>

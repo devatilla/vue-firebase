@@ -1,7 +1,19 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import Login from "../views/Login.vue";
+import Logout from "../views/Logout.vue";
+import Share from "../views/Share.vue";
+import { auth } from "../firebase/config";
 
+const isLogin = (to, from, next) => {
+  let user = auth.currentUser;
+
+  if (!user) {
+    next({ name: "Login" });
+  } else {
+    next();
+  }
+};
 const routes = [
   {
     path: "/",
@@ -12,6 +24,17 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
+  },
+  {
+    path: "/logout",
+    name: "Logout",
+    component: Logout,
+  },
+  {
+    path: "/share",
+    name: "Share",
+    component: Share,
+    beforeEnter: isLogin,
   },
 ];
 
